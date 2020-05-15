@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,18 +37,25 @@ public class UserResource {
 		return ResponseEntity.ok().body(obj);
 	}
 
-	@PostMapping // adiciona informações
+	@PostMapping // adiciona novas informações
 	public ResponseEntity<User> insert(@RequestBody User obj) {
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).body(obj);
 	}
 	
-	@DeleteMapping(value = "/{id}") //deletar por id
+	@DeleteMapping(value = "/{id}") //deletar usuário por id
 	public ResponseEntity<Void> delete(@PathVariable Long id){ //anotação usada para reconhecer o id do banco
 		service.delete(id);
 		return ResponseEntity.noContent().build(); // retorna resposta sem conteúdo
 		
 	}
+	
+	@PutMapping(value = "/{id}") // atualizar dados do usuário por id
+	public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User obj) {
+		obj = service.update(id, obj);
+		return ResponseEntity.ok().body(obj);
+	}
+	
 
 }
