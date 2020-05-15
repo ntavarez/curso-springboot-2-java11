@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,13 +24,13 @@ public class UserResource {
 	@Autowired
 	private UserService service;
 
-	@GetMapping
+	@GetMapping //buscando usuários percorrendo lista
 	public ResponseEntity<List<User>> findAll() {
 		List<User> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "/{id}") //buscar por id
 	public ResponseEntity<User> findById(@PathVariable Long id) {
 		User obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
@@ -40,6 +41,13 @@ public class UserResource {
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).body(obj);
+	}
+	
+	@DeleteMapping(value = "/{id}") //deletar por id
+	public ResponseEntity<Void> delete(@PathVariable Long id){ //anotação usada para reconhecer o id do banco
+		service.delete(id);
+		return ResponseEntity.noContent().build(); // retorna resposta sem conteúdo
+		
 	}
 
 }
